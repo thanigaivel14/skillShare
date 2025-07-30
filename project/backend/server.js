@@ -10,7 +10,7 @@ const io= new Server(server,{
         origin:"https://skillshare-1-pmeq.onrender.com",
         methods:["GET","POST"],
         transports: ["websocket"],
-        Credentials:true
+        credentials:true
     }
 })
 
