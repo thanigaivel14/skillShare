@@ -2,7 +2,7 @@
   import API from "../api";
   import { useNavigate } from "react-router-dom";
   import socket from "../utils/socket";
-
+import { useLocation } from "react-router-dom";
   const AuthContext = createContext();
 
   export const AuthProvider = ({ children }) => {
@@ -11,7 +11,15 @@
     const [authReady, setAuthReady] = useState(false);
 
     const navigate = useNavigate();
-
+useEffect(() => {
+  const publicPaths = ["/login", "/register"];
+  if (!publicPaths.includes(location.pathname)) {
+    fetchUser();
+  } else {
+    setLoading(false);
+    setAuthReady(true);
+  }
+}, []);
     
       const fetchUser = async () => {
         try {
