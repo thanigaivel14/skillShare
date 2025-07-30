@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import API from "../api";
 
 const Login = () => {
-  const { setUser } = useAuth();
+  const { setUser,fetchUser } = useAuth();
 const navigate=useNavigate();
   const [userinfo, setUserInfo] = useState({
     email: "",
@@ -22,6 +22,7 @@ const navigate=useNavigate();
       const res = await API.post("/user/login", userinfo, {
         withCredentials: true,
       });
+      fetchUser();
       setUser(res.data); // store user globally
       navigate("/feed");
     } catch (err) {
