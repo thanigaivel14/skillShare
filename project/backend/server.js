@@ -8,9 +8,9 @@ const server=http.createServer(app);
 const io= new Server(server,{
     cors:{
         origin:"https://skillshare-1-pmeq.onrender.com",
-        methods:["GET,POST"],
+        methods:["GET","POST"],
         transports: ["websocket"],
-        Credential:true
+        Credentials:true
     }
 })
 
@@ -85,7 +85,7 @@ socket.on("sendNotification", async ({userId, location }) => {
     
   });
 })
-server.listen(8000, () => {
-  console.log("Server running on http://localhost:8000");
-});
-export { server };
+ const PORT = process.env.PORT || 8000;
+ server.listen(PORT, () => {
+   console.log(`Server running on http://localhost:${PORT}`);
+ });
