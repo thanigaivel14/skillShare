@@ -12,7 +12,7 @@ const app=express();
 app.use(express.json())
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:5173', // frontend origin
+  origin: 'https://skillshare-1-pmeq.onrender.com', // frontend origin
   credentials: true                // allow sending cookies
 }));
 
