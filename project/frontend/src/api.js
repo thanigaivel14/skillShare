@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000/api", // adjust if different
+  baseURL: "https://skillshare-1j86.onrender.com", // adjust if different
   withCredentials: true,                // send HTTP-only cookies
 });
 
