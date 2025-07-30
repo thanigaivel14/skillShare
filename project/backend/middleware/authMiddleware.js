@@ -5,7 +5,6 @@ const protect = async (req, res, next) => {
   const token = req.cookies.token;
   if (!token|| token==='undefined') {
     res.status(200);
-    throw new Error('Not authorized, no token');
   }
 
   try {
@@ -14,7 +13,6 @@ const protect = async (req, res, next) => {
     next();
   } catch (err) {
     res.status(401);
-    throw new Error('Not authorized, token failed');
   }
 };
 
