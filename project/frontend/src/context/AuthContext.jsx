@@ -12,7 +12,7 @@
 
     const navigate = useNavigate();
 
-    useEffect(() => {
+    
       const fetchUser = async () => {
         try {
           const res = await API.get("/user/me");
@@ -34,8 +34,8 @@
         }
       };
 
-      fetchUser();
-    }, []);
+      
+    
       
 
     const logout = async () => {
@@ -50,7 +50,7 @@
     };
 
     return (
-      <AuthContext.Provider value={{ user, setUser, logout, loading, setLoading, authReady }}>
+      <AuthContext.Provider value={{ user, setUser, logout, loading, setLoading, authReady,fetchUser }}>
         {children}
       </AuthContext.Provider>
     );
