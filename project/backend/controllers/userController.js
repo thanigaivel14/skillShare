@@ -39,13 +39,13 @@ const register = asyncHandler(async (req, res) => {
 
   // 4. Send cookie and return user info
   if (user) {
-    res
-      .cookie('token', generateToken(user._id), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite:'lax',
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
-      })
+   res.cookie('token', generateToken(user._id), {
+  httpOnly: true,
+  secure: true,               // ensures HTTPS only
+  sameSite: 'None',           // must be 'None' for cross-site cookies
+  domain: '.onrender.com',    // optional but helps with subdomain issues
+  maxAge: 24 * 60 * 60 * 1000,
+});
       .status(201)
       .json({
         _id: user._id,
@@ -77,13 +77,13 @@ const login = asyncHandler(async (req, res) => {
   }
 
   // 3. Set cookie and return user
-  res
-    .cookie('token', generateToken(user._id), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000,
-    })
+ res.cookie('token', generateToken(user._id), {
+  httpOnly: true,
+  secure: true,               // ensures HTTPS only
+  sameSite: 'None',           // must be 'None' for cross-site cookies
+  domain: '.onrender.com',    // optional but helps with subdomain issues
+  maxAge: 24 * 60 * 60 * 1000,
+});
     .status(200)
     .json({
       id: user._id,
