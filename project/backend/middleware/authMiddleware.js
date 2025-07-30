@@ -4,7 +4,7 @@ import User from '../model/User.js';
 const protect = async (req, res, next) => {
   const token = req.cookies.token;
   if (!token|| token==='undefined') {
-    res.status(200);
+     return res.status(401).json({ message: 'Not authorized, no token' });
   }
 
   try {
@@ -12,7 +12,7 @@ const protect = async (req, res, next) => {
     req.user = await User.findById(decoded.id).select('-password');
     next();
   } catch (err) {
-    res.status(401);
+     return res.status(401).json({ message: 'Not authorized, token failed' });
   }
 };
 
