@@ -39,13 +39,14 @@ const register = asyncHandler(async (req, res) => {
 
   // 4. Send cookie and return user info
   if (user) {
-   res.cookie('token', generateToken(user._id), {
-  httpOnly: true,
-  secure: true,               // ensures HTTPS only
-  sameSite: 'None',           // must be 'None' for cross-site cookies
-  domain: '.onrender.com',    // optional but helps with subdomain issues
-  maxAge: 24 * 60 * 60 * 1000,
-});
+    res
+      .cookie('token', generateToken(user._id), {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        domain: '.onrender.com', // optional for subdomain cases
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+      })
       .status(201)
       .json({
         _id: user._id,
@@ -59,14 +60,17 @@ const register = asyncHandler(async (req, res) => {
   }
 });
 
+// ===============================
+// @desc    Login user
+// @route   POST /api/users/login
+// @access  Public
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   // 1. Find user
   const user = await User.findOne({ email });
   if (!user) {
-    res.status(404).json({message:"user not found"});
-    
+    return res.status(404).json({ message: "User not found" });
   }
 
   // 2. Check password
@@ -77,32 +81,40 @@ const login = asyncHandler(async (req, res) => {
   }
 
   // 3. Set cookie and return user
- res.cookie('token', generateToken(user._id), {
-  httpOnly: true,
-  secure: true,               // ensures HTTPS only
-  sameSite: 'None',           // must be 'None' for cross-site cookies
-  domain: '.onrender.com',    // optional but helps with subdomain issues
-  maxAge: 24 * 60 * 60 * 1000,
-});
+  res
+    .cookie('token', generateToken(user._id), {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      domain: '.onrender.com',
+      maxAge: 24 * 60 * 60 * 1000,
+    })
     .status(200)
     .json({
       id: user._id,
       username: user.username,
       email: user.email,
       location: user.location,
-      avatar: user.avatar
+      avatar: user.avatar,
     });
 });
 
+// ===============================
+// @desc    Get current user
+// @route   GET /api/users/me
+// @access  Private
 const getMe = asyncHandler(async (req, res) => {
   const user = req.user;
- 
   if (!user) {
-    res.status(200).json({ message: "user not logged in" })
+    return res.status(200).json({ message: "User not logged in" });
   }
-  res.status(200).json({ user })
-})
+  res.status(200).json({ user });
+});
 
+// ===============================
+// @desc    Update profile
+// @route   PUT /api/users/profile
+// @access  Private
 const updateProfile = asyncHandler(async (req, res) => {
   try {
     let user = await User.findById(req.user.id);
@@ -110,9 +122,7 @@ const updateProfile = asyncHandler(async (req, res) => {
 
     // 🗑 Delete old image if it exists
     if (user.avatarPublicId && user.avatar?.includes("res.cloudinary.com")) {
-     
-      const result = await cloudinary.uploader.destroy(user.avatarPublicId);
-     
+      await cloudinary.uploader.destroy(user.avatarPublicId);
     }
 
     // ✏️ Update username and location
@@ -121,20 +131,16 @@ const updateProfile = asyncHandler(async (req, res) => {
 
     // 🆕 Upload new avatar
     if (req.file && req.file.path) {
-      user.avatar = req.file.path; // Cloudinary URL
-      user.avatarPublicId = req.file.filename; // Already includes folder name like: user_avatars/...
+      user.avatar = req.file.path;
+      user.avatarPublicId = req.file.filename;
     }
 
     const updatedUser = await user.save();
-    res.json({ user: updatedUser });  
+    res.json({ user: updatedUser });
 
   } catch (e) {
     res.status(400).json({ message: e.message });
   }
 });
-
-
-
-
 
 export { register, login, getMe, updateProfile };
