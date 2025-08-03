@@ -2,9 +2,14 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "app.js",
+  "engines": {
+  "node": "20.12.2",
+  "npm": "10.5.0"
+}
+,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/server.js",
+    "start": "node server.js",
     "server":"nodemon backend/server.js",
     "build": "npm install --prefix ../frontend --include=dev && npm run build --prefix ../frontend"
 
