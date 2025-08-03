@@ -21,10 +21,8 @@ const Feed = () => {
         if (res.data?.data && Array.isArray(res.data.data)) {
           const arr = res.data.data.filter((post) => user?._id !== post.user?._id);
           
-          setPosts(arr);
-        } else {
-          throw new Error("Invalid data format from API");
-        }
+          setPosts(arr)
+        } 
       } catch (e) {
         console.error("Error fetching posts:", e.message);
         setError(e.message);
@@ -178,7 +176,7 @@ const Feed = () => {
           onClick={() => setCreatePost((prev) => !prev)}
           className="bg-blue-700 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-800 transition"
         >
-          {createPost ? "Cancel" : "Create Post"}
+          {createPost ? "Cancel" : "Skill"}
         </button>
       </div>
     </div>

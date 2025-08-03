@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import User from '../model/User.js';
 import jwt from 'jsonwebtoken';
 import { cloudinary } from '../utils/cloudinary.js';
-
 // Generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -17,7 +16,7 @@ const generateToken = (id) => {
 // @access  Public
 const register = asyncHandler(async (req, res) => {
   const { username, email, password, location } = req.body;
-
+   
   // 1. Check if user exists
   const exists = await User.findOne({ email });
   if (exists) {
@@ -42,9 +41,9 @@ const register = asyncHandler(async (req, res) => {
     res
       .cookie('token', generateToken(user._id), {
         httpOnly: true,
-        secure: true,
+          secure: process.env.NODE_ENV === 'production',
         sameSite: 'None',
-        domain: '.onrender.com', // optional for subdomain cases
+        // domain: '.onrender.com', // optional for subdomain cases
         maxAge: 24 * 60 * 60 * 1000, // 1 day
       })
       .status(201)
@@ -84,9 +83,9 @@ const login = asyncHandler(async (req, res) => {
   res
     .cookie('token', generateToken(user._id), {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'None',
-      domain: '.onrender.com',
+      // domain: '.onrender.com',
       maxAge: 24 * 60 * 60 * 1000,
     })
     .status(200)

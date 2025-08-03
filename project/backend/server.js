@@ -1,17 +1,27 @@
 import app from "./app.js"
+import express from "express"
 import http from "http"
 import {Server} from "socket.io"
 import Message from "./model/Message.js"
 import User from "./model/User.js";
+import path from "path";
+const __dirname1 = path.resolve("../");
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1, "frontend", "dist")));
+
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname1, "frontend", "dist", "index.html"));
+  });
+}
+else{
+  app.get("/",(req,res)=>{
+    res.send("app is running....")
+  })
+}
 const server=http.createServer(app);
 
 const io= new Server(server,{
-    cors:{
-        origin:"https://skillshare-1-pmeq.onrender.com",
-        methods:["GET","POST"],
-        transports: ["websocket"],
-        credentials:true
-    }
 })
 
 const onlineUsers= new Map();
@@ -85,6 +95,8 @@ socket.on("sendNotification", async ({userId, location }) => {
     
   });
 })
+
+
  const PORT = process.env.PORT || 8000;
  server.listen(PORT, () => {
    console.log(`Server running on http://localhost:${PORT}`);

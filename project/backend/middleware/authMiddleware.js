@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../model/User.js';
 
 const protect = async (req, res, next) => {
+
   const token = req.cookies.token;
   if (!token|| token==='undefined') {
      return res.status(401).json({ message: 'Not authorized, no token' });

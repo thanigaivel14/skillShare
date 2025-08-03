@@ -20,7 +20,7 @@ const userSchema= new Schema({
     },
     avatar:{
         type:"String",
-        default:"image1"
+        default:"/static/images.png"
     },
     avatarPublicId: { type: String },
 })
